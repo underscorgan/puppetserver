@@ -115,7 +115,9 @@
                        :create-dirs ["/opt/puppetlabs/server/data/puppetserver/jars"]
                        :repo-target "PC1"
                        :bootstrap-source :services-d
-                       :logrotate-enabled false}
+                       :logrotate-enabled false
+                       :redhat-postinst-triggers [ { :package "puppet-agent", :script ["echo 'hi'", "true"] }, { :package "vim", :script ["true"]} ]
+                       }
                 :resources {:dir "tmp/ezbake-resources"}
                 :config-dir "ezbake/config"
                 :system-config-dir "ezbake/system-config"
@@ -211,7 +213,7 @@
                                                [puppetlabs/puppetserver ~ps-version :exclusions [puppetlabs/jruby-deps]]
                                                [puppetlabs/trapperkeeper-webserver-jetty9 nil]
                                                [org.clojure/tools.nrepl nil]]
-                      :plugins [[puppetlabs/lein-ezbake "1.4.0"]]
+                      :plugins [[puppetlabs/lein-ezbake "1.6.2-SNAPSHOT"]]
                       :name "puppetserver"}
              :uberjar {:aot [puppetlabs.trapperkeeper.main]
                        :dependencies [[puppetlabs/trapperkeeper-webserver-jetty9 nil]]}
