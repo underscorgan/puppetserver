@@ -2,6 +2,7 @@
 
 set -eux
 
+export PUPPET_DOCKER_LOCATION='https://github.com/underscorgan/puppet_docker_tools#tickets/master/CPR-583-update-lints'
 BUNDLER_PATH=.bundle/gems
 
 function build_and_test_image() {
