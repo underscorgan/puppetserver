@@ -8,12 +8,18 @@ require 'open3'
 # lint the container
 def lint(container, is_nightly: false)
   local_exec = false
-  %x(hadolint --help)
-  if $?.exitstatus == 0
-    local_exec = true
+  begin
+    %x(hadolint --help)
+    if $?.exitstatus == 0
+      local_exec = true
+    end
+  rescue Errno::ENOENT
+    puts "Did not find hadolint in your path, running from docker container"
   end
 
+  dockerfile = get_dockerfile(is_nightly)
   command = "hadolint --ignore DL3008 --ignore DL3018 --ignore DL4000 --ignore DL4001"
+
   if local_exec
     command = "#{command} #{File.join(Dir.pwd, container, dockerfile)}"
   else
@@ -25,11 +31,9 @@ def lint(container, is_nightly: false)
     command = "docker run --rm -v #{File.join(Dir.pwd, container, dockerfile)}:/Dockerfile:ro -i #{lint_image} #{command} Dockerfile"
   end
 
-  dockerfile = get_dockerfile(is_nightly)
-
   # run this command from the 'docker' directory
   Dir.chdir(File.dirname(File.dirname(__FILE__))) do
-    output = %x(hadolint --ignore DL3008 --ignore DL3018 --ignore DL4000 --ignore DL4001 #{File.join(Dir.pwd, container, dockerfile)})
+    output = %x(#{command})
     status = $?.exitstatus
     puts output
     fail "Running hadolint against #{File.join(container, dockerfile)} failed!" unless status == 0
