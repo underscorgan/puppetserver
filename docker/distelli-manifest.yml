@@ -1,4 +1,4 @@
-pe-and-platform/puppetserver:
+release-engineering/puppetserver:
   PreBuild:
     - bundle install --path .bundle/gems
     - bundle exec ci/pre_build
