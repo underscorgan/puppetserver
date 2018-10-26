@@ -1,5 +1,7 @@
 release-engineering/puppetserver:
   PreBuild:
+    - echo "PATH === $PATH"
+    - echo "id === $(id)"
     - bundle install --path .bundle/gems
     - bundle exec ci/pre_build
   Build:
