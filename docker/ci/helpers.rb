@@ -7,13 +7,23 @@ require 'open3'
 
 # lint the container
 def lint(container, is_nightly: false)
-  lint_image = 'hadolint/hadolint:latest'
-  # can we get away with just using the hadolint container since we aren't using
-  # pipelines hw? how does azure do with volume mounting?
-  output = %x(docker pull #{lint_image})
-  status = $?.exitstatus
-  puts output
-  fail "Fetching #{lint_image} failed!" unless status == 0
+  local_exec = false
+  %x(hadolint --help)
+  if $?.exitstatus == 0
+    local_exec = true
+  end
+
+  command = "hadolint --ignore DL3008 --ignore DL3018 --ignore DL4000 --ignore DL4001"
+  if local_exec
+    command = "#{command} #{File.join(Dir.pwd, container, dockerfile)}"
+  else
+    lint_image = 'hadolint/hadolint:latest'
+    output = %x(docker pull #{lint_image})
+    status = $?.exitstatus
+    puts output
+    fail "Fetching #{lint_image} failed!" unless status == 0
+    command = "docker run --rm -v #{File.join(Dir.pwd, container, dockerfile)}:/Dockerfile:ro -i #{lint_image} #{command} Dockerfile"
+  end
 
   dockerfile = get_dockerfile(is_nightly)
 
