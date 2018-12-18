@@ -11,6 +11,8 @@ ENV PATH=/opt/puppetlabs/server/bin:/opt/puppetlabs/puppet/bin:/opt/puppetlabs/b
 ENV PUPPET_HEALTHCHECK_ENVIRONMENT="production"
 ENV PUPPETSERVER_MAX_ACTIVE_INSTANCES=1
 ENV PUPPETSERVER_MAX_REQUESTS_PER_INSTANCE=0
+ENV TERMINATE_SSL=false
+ENV ENABLE_CA=true
 
 LABEL org.label-schema.maintainer="Puppet Release Team <release@puppet.com>" \
       org.label-schema.vendor="Puppet" \
