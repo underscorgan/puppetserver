@@ -72,11 +72,11 @@ test: prep
 		bundle exec rspec --options puppetserver/.rspec spec
 
 publish: prep
-	@docker push puppet/puppetserver-standalone:$(version)
-	@docker push puppet/puppetserver:$(version)
+	@docker push $(NAMESPACE)/puppetserver-standalone:$(version)
+	@docker push $(NAMESPACE)/puppetserver:$(version)
 ifeq ($(IS_LATEST),true)
-	@docker push puppet/puppetserver-standalone:latest
-	@docker push puppet/puppetserver:latest
+	@docker push $(NAMESPACE)/puppetserver-standalone:latest
+	@docker push $(NAMESPACE)/puppetserver:latest
 endif
 
 .PHONY: lint build test publish

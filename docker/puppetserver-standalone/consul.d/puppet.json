@@ -1,0 +1,14 @@
+{
+  "service": {
+    "name": "puppet",
+    "id": "puppet",
+    "port": 8140,
+    "checks": [
+      {
+        "http": "https://127.0.0.1:8140/status/v1/services",
+        "tls_skip_verify": true,
+        "interval": "30s"
+      }
+    ]
+  }
+}

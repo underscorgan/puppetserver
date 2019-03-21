@@ -12,6 +12,7 @@ ENV PUPPERWARE_ANALYTICS_APP_NAME="puppetserver-standalone"
 
 ENV PUPPET_SERVER_VERSION="$version"
 ENV DUMB_INIT_VERSION="1.2.1"
+ENV CONSUL_VERSION="1.4.3"
 ENV UBUNTU_CODENAME="xenial"
 ENV PUPPETSERVER_JAVA_ARGS="-Xms512m -Xmx512m"
 ENV PATH=/opt/puppetlabs/server/bin:/opt/puppetlabs/puppet/bin:/opt/puppetlabs/bin:$PATH
@@ -19,6 +20,7 @@ ENV PUPPET_HEALTHCHECK_ENVIRONMENT="production"
 ENV PUPPETSERVER_MAX_ACTIVE_INSTANCES=1
 ENV PUPPETSERVER_MAX_REQUESTS_PER_INSTANCE=0
 ENV CA_ENABLED=true
+ENV CONSUL_HOSTNAME="consul"
 
 LABEL org.label-schema.maintainer="Puppet Release Team <release@puppet.com>" \
       org.label-schema.vendor="Puppet" \
@@ -33,12 +35,14 @@ LABEL org.label-schema.maintainer="Puppet Release Team <release@puppet.com>" \
       org.label-schema.dockerfile="/Dockerfile"
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends wget=1.17.1-1ubuntu1 ca-certificates && \
+    apt-get install -y --no-install-recommends wget=1.17.1-1ubuntu1 ca-certificates unzip gosu && \
     wget https://apt.puppetlabs.com/puppet6-release-"$UBUNTU_CODENAME".deb && \
     wget https://github.com/Yelp/dumb-init/releases/download/v"$DUMB_INIT_VERSION"/dumb-init_"$DUMB_INIT_VERSION"_amd64.deb && \
+    wget https://releases.hashicorp.com/consul/"$CONSUL_VERSION"/consul_"$CONSUL_VERSION"_linux_amd64.zip && \
     dpkg -i puppet6-release-"$UBUNTU_CODENAME".deb && \
     dpkg -i dumb-init_"$DUMB_INIT_VERSION"_amd64.deb && \
-    rm puppet6-release-"$UBUNTU_CODENAME".deb dumb-init_"$DUMB_INIT_VERSION"_amd64.deb && \
+    unzip -d /usr/local/bin consul_"$CONSUL_VERSION"_linux_amd64.zip && \
+    rm puppet6-release-"$UBUNTU_CODENAME".deb dumb-init_"$DUMB_INIT_VERSION"_amd64.deb consul_"$CONSUL_VERSION"_linux_amd64.zip && \
     apt-get update && \
     apt-get install --no-install-recommends git -y puppetserver="$PUPPET_SERVER_VERSION"-1"$UBUNTU_CODENAME" && \
     apt-get clean && \
@@ -58,6 +62,7 @@ RUN puppet config set autosign true --section master && \
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 COPY docker-entrypoint.d /docker-entrypoint.d
+COPY consul.d /etc/consul.d
 
 EXPOSE 8140
 
