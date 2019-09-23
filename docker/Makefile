@@ -47,6 +47,14 @@ build: prep
 		--build-arg build_date=$(build_date) \
 		--build-arg version=$(VERSION) \
 		--build-arg pupperware_analytics_stream=$(PUPPERWARE_ANALYTICS_STREAM) \
+		--file puppetserver-base/Dockerfile \
+		--tag $(NAMESPACE)/puppetserver-base:$(VERSION) puppetserver-base
+	@docker build \
+		--build-arg namespace=$(NAMESPACE) \
+		--build-arg vcs_ref=$(vcs_ref) \
+		--build-arg build_date=$(build_date) \
+		--build-arg version=$(VERSION) \
+		--build-arg pupperware_analytics_stream=$(PUPPERWARE_ANALYTICS_STREAM) \
 		--file puppetserver-standalone/$(dockerfile) \
 		--tag $(NAMESPACE)/puppetserver-standalone:$(VERSION) $(dockerfile_context)
 	@docker build \
