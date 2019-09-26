@@ -1,29 +1,25 @@
-# [puppetlabs/puppetserver](https://github.com/puppetlabs/puppetserver)
+# [puppetlabs/puppetserver-standalone](https://github.com/puppetlabs/puppetserver)
 
 The Dockerfile for this image is available in the Puppetserver repository
 [here][1].
 
 You can run a copy of Puppet Server with the following Docker command:
 
-    docker run --name puppet --hostname puppet puppet/puppetserver
+    docker run --name puppet --hostname puppet puppet/puppetserver-standalone
 
 Although it is not strictly necessary to name the container `puppet`, this is
 useful when working with the other Puppet images, as they will look for a master
 on that hostname by default.
 
 If you would like to start the Puppet Server with your own Puppet code, you can
-mount your own directory at `/etc/puppetlabs/code`.
+mount your own directory at `/etc/puppetlabs/code`:
 
-    docker run --name puppet --hostname puppet -v ./code:/etc/puppetlabs/code/ puppet/puppetserver
+    docker run --name puppet --hostname puppet -v ./code:/etc/puppetlabs/code/ puppet/puppetserver-standalone
 
-Note that this container will send reports to a PuppetDB instance on
-`https://puppetdb`. Puppet runs will not fail by default if PuppetDB cannot be
-reached. If you are not using PuppetDB, then the
-`puppet/puppetserver-standalone` container may be a better choice. You can find
-out more about Puppet Server in the [official documentation][2].
+You can find out more about Puppet Server in the [official documentation][2].
 
-See the [pupperware repository][3] for how to run a full Puppet stack using
-Docker Compose.
+See the [pupperware repository][3] for running a full Puppet stack using Docker
+Compose.
 
 ## Configuration
 
@@ -77,18 +73,6 @@ The following environment variables are supported:
 
   If consul is enabled, the port to access consul at. Defaults to '8500'.
 
-- `PUPPET_REPORTS`
-
-  Sets `reports` in puppet.conf. Defaults to 'puppetdb'.
-
-- `PUPPET_STORECONFIGS`
-
-  Sets `storeconfigs` in puppet.conf. Defaults to true.
-
-- `PUPPET_STORECONFIGS_BACKEND`
-
-  Sets `storeconfigs_backend` in puppet.conf. Defaults to 'puppetdb'.
-
 - `PUPPETDB_SERVER_URLS`
 
   The `server_urls` to set in /etc/puppetlabs/puppet/puppetdb.conf. Defaults to 'https://puppetdb:8081'.
@@ -114,21 +98,22 @@ These scripts will be executed at the end of the entrypoint script, before the s
 
 ## Analytics Data Collection
 
-The puppetserver container collects usage data. This is disabled by default. You can enable it by passing `--env PUPPERWARE_ANALYTICS_ENABLED=true`
+The puppetserver-standalone container collects usage data. This is disabled by default. You can enable it by passing `--env PUPPERWARE_ANALYTICS_ENABLED=true`
 to your `docker run` command.
 
 ### What data is collected?
-* Version of the puppetserver container.
+* Version of the puppetserver-standalone container.
 * Anonymized IP address is used by Google Analytics for Geolocation data, but the IP address is not collected.
 
-### Why does the puppetserver container collect data?
+### Why does the puppetserver-standalone container collect data?
 
 We collect data to help us understand how the containers are used and make decisions about upcoming changes.
 
-### How can I opt out of puppetserver container data collection?
+### How can I opt out of puppetserver-standalone container data collection?
 
 This is disabled by default.
 
-[1]: https://github.com/puppetlabs/puppetserver/blob/master/docker/puppetserver/Dockerfile
+
+[1]: https://github.com/puppetlabs/puppetserver/blob/master/docker/puppetserver-standalone/Dockerfile
 [2]: https://puppet.com/docs/puppetserver/latest/services_master_puppetserver.html
 [3]: https://github.com/puppetlabs/pupperware

@@ -21,11 +21,14 @@ ENV PUPPETSERVER_MAX_ACTIVE_INSTANCES=1
 ENV PUPPETSERVER_MAX_REQUESTS_PER_INSTANCE=0
 ENV CA_ENABLED=true
 ENV CA_ALLOW_SUBJECT_ALT_NAMES=false
+ENV PUPPET_STORECONFIGS_BACKEND="puppetdb"
+ENV PUPPET_STORECONFIGS=true
+ENV PUPPET_REPORTS="puppetdb"
 
 LABEL org.label-schema.maintainer="Puppet Release Team <release@puppet.com>" \
       org.label-schema.vendor="Puppet" \
       org.label-schema.url="https://github.com/puppetlabs/puppetserver" \
-      org.label-schema.name="Puppet Server (No PuppetDB)" \
+      org.label-schema.name="Puppet Server Base Image" \
       org.label-schema.license="Apache-2.0" \
       org.label-schema.version="$PUPPET_SERVER_VERSION" \
       org.label-schema.vcs-url="https://github.com/puppetlabs/puppetserver" \
